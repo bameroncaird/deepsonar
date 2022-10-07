@@ -327,9 +327,9 @@ def vggvox_resnet2d_icassp(input_dim=(257, 250, 1), num_class=8631, mode='train'
     # mgpu = len(keras.backend.tensorflow_backend._get_available_gpus())
 
     if net == 'resnet34s':
-        inputs, x = backbone.resnet_2D_v1(input_dim=input_dim, mode=mode)
+        inputs, x = resnet_2D_v1(input_dim=input_dim, mode=mode)
     else:
-        inputs, x = backbone.resnet_2D_v2(input_dim=input_dim, mode=mode)
+        inputs, x = resnet_2D_v2(input_dim=input_dim, mode=mode)
     # ===============================================
     #            Fully Connected Block 1
     # ===============================================
@@ -442,20 +442,20 @@ def vggvox_resnet2d_icassp(input_dim=(257, 250, 1), num_class=8631, mode='train'
 # they have a command line interface with inputs, we're just defining a static function in a file
 import os
 
-def load_pretrained_model_weights():
-    """ 
-    Loads the pretrained VGG model weights.
+def load_pretrained_vgg_model():
+    """
+    Loads and returns the pretrained VGG model, starting from the weights file.
     """
     # load hyperparameters
     # these are mostly default values from the original repo
     hyper_params = {
         'batch_size': 16, 'resnet_type': 'resnet34s',  # other option: resnet34l, this is how the weights were saved for the pretrained model
         'num_ghost_clusters': 2, 'num_vlad_clusters': 8, 'bottleneck_dim': 512,
-        'aggregation_mode': 'gvlad',  # other options: vlad, avg
+        'aggregation_mode': 'gvlad',  # means ghostvlad, other options: vlad, avg
         'loss': 'softmax',  # other option: amsoftmax
         'input_shape': (257, None, 1), 'n_fft': 512, 'spectro_len': 250,
         'window_len': 400, 'hop_len': 160, 'num_classes': 5994, 'sampling_rate': 16000,
-        'weights_path': '/home/cameron/hdd/experiments/voice/models/vgg_model/pretrained_vgg_weights.h5',
+        'weights_path': "../sr_models/vgg_sr_pretrained_weights.h5",
         'normalize': True,
         'data_path': '/media/df/wd1/deepvoice_datasets/FoR/for-norm'
     }
@@ -470,9 +470,10 @@ def load_pretrained_model_weights():
     # for DeepSonar, we don't need to retrain the SR system, we assume that the weights have all the necessary information
     # problem: how to properly select the time?
     # from predict.py: "the feature extraction has to be done sample by sample since each one is of different length"
+    mode = 'eval' # can be 'train' or 'eval', we'll do 'eval' mode since we are not training the model
     model = vggvox_resnet2d_icassp(
         input_dim=hyper_params['input_shape'], num_class=hyper_params['num_classes'],
-        mode='eval', args=hyper_params
+        mode=mode, args=hyper_params
     )
 
     # load the weights into the architecture
@@ -490,7 +491,3 @@ def load_pretrained_model_weights():
 
 ########################################################################################
 ########################################################################################
-# in this section, we'll put the pretrained weights into the model architecture
-# this is done in main.py and predict.py in the original author's code
-# this is not copied and pasted from the authors because we need to do it slightly differently
-# they have a command line interface with inputs, we're just defining a static function in a file
