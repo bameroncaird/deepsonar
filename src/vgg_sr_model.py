@@ -140,11 +140,16 @@ def conv_block_2D(input_tensor, kernel_size, filters, stage, block, strides=(2, 
     return x
 
 def resnet_2D_v1(input_dim, mode='train'):
+
+    # change input dim to match tf tutorial
+    # input_dim = (124, 129, 1)
+
     bn_axis = 3
     if mode == 'train':
         inputs = Input(shape=input_dim, name='input')
     else:
-        inputs = Input(shape=(input_dim[0], None, input_dim[-1]), name='input')
+        # inputs = Input(shape=(input_dim[0], None, input_dim[-1]), name='input')
+        inputs = Input(shape=(124, 129, 1), name='input')
     # ===============================================
     #            Convolution Block 1
     # ===============================================
@@ -316,7 +321,7 @@ def amsoftmax_loss(y_true, y_pred, scale=30, margin=0.35):
     return K.categorical_crossentropy(y_true, y_pred, from_logits=True)
 
 
-def vggvox_resnet2d_icassp(input_dim=(257, 250, 1), num_class=8631, mode='train', args=None):
+def vggvox_resnet2d_icassp(input_dim=(127, 129, 1), num_class=8631, mode='train', args=None):
     net = args['resnet_type']
     loss = args['loss']
     vlad_clusters = args['num_vlad_clusters']
@@ -453,7 +458,7 @@ def load_pretrained_vgg_model():
         'num_ghost_clusters': 2, 'num_vlad_clusters': 8, 'bottleneck_dim': 512,
         'aggregation_mode': 'gvlad',  # means ghostvlad, other options: vlad, avg
         'loss': 'softmax',  # other option: amsoftmax
-        'input_shape': (257, None, 1), 'n_fft': 512, 'spectro_len': 250,
+        'input_shape': (124, 129, 1), 'n_fft': 512, 'spectro_len': 250,
         'window_len': 400, 'hop_len': 160, 'num_classes': 5994, 'sampling_rate': 16000,
         'weights_path': "../sr_models/vgg_sr_pretrained_weights.h5",
         'normalize': True,
@@ -466,7 +471,7 @@ def load_pretrained_vgg_model():
     # in eval mode, an extra layer is tacked on to the end of the network to compute the cosine similarity
     # this is how the VGG network was originally tested using VoxCeleb1
     # in train mode, the model is compiled and the GPUs are set up for training
-    # since we just need the activations and we are using the pretrained model, let's use eval mode
+     # since we just need the activations and we are using the pretrained model, let's use eval mode
     # for DeepSonar, we don't need to retrain the SR system, we assume that the weights have all the necessary information
     # problem: how to properly select the time?
     # from predict.py: "the feature extraction has to be done sample by sample since each one is of different length"

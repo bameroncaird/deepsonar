@@ -3,65 +3,65 @@ import numpy as np
 import os
 import pickle
 
-from Labels import Labels
+# from Labels import Labels
 import utils as ut
 
 # file provides various data-related functions
 
 
-def get_for_datalist(**params):
-    """
-    Returns partition and labels dictionaries.
-    partition = { 'train': <paths>, 'val': <paths>, 'test': <paths> }
-    labels = { 'path': label for all paths in all splits }
-    Used for DataGenerator.
-    """
-    partition, labels = {}, {}
-    data_path = '/home/cameron/voice_data/fake-or-real/for-norm'
+# def get_for_datalist(**params):
+#     """
+#     Returns partition and labels dictionaries.
+#     partition = { 'train': <paths>, 'val': <paths>, 'test': <paths> }
+#     labels = { 'path': label for all paths in all splits }
+#     Used for DataGenerator.
+#     """
+#     partition, labels = {}, {}
+#     data_path = '/home/cameron/voice_data/fake-or-real/for-norm'
 
-    # training partition
-    training_list = []
-    training_path_real = os.path.join(data_path, 'training', 'real')
-    training_path_fake = os.path.join(data_path, 'training', 'fake')
-    for file_name in os.listdir(path=training_path_real):
-        audio_path = os.path.join(training_path_real, file_name)
-        training_list.append(audio_path)
-        labels[audio_path] = Labels.REAL.value
-    for file_name in os.listdir(path=training_path_fake):
-        audio_path = os.path.join(training_path_fake, file_name)
-        training_list.append(audio_path)
-        labels[audio_path] = Labels.FAKE.value
-    partition['train'] = training_list
+#     # training partition
+#     training_list = []
+#     training_path_real = os.path.join(data_path, 'training', 'real')
+#     training_path_fake = os.path.join(data_path, 'training', 'fake')
+#     for file_name in os.listdir(path=training_path_real):
+#         audio_path = os.path.join(training_path_real, file_name)
+#         training_list.append(audio_path)
+#         labels[audio_path] = Labels.REAL.value
+#     for file_name in os.listdir(path=training_path_fake):
+#         audio_path = os.path.join(training_path_fake, file_name)
+#         training_list.append(audio_path)
+#         labels[audio_path] = Labels.FAKE.value
+#     partition['train'] = training_list
 
-    # validation partition
-    val_list = []
-    val_path_real = os.path.join(data_path, 'validation', 'real')
-    val_path_fake = os.path.join(data_path, 'validation', 'fake')
-    for file_name in os.listdir(path=val_path_real):
-        audio_path = os.path.join(val_path_real, file_name)
-        val_list.append(audio_path)
-        labels[audio_path] = Labels.REAL.value
-    for file_name in os.listdir(path=val_path_fake):
-        audio_path = os.path.join(val_path_fake, file_name)
-        val_list.append(audio_path)
-        labels[audio_path] = Labels.FAKE.value
-    partition['val'] = val_list
+#     # validation partition
+#     val_list = []
+#     val_path_real = os.path.join(data_path, 'validation', 'real')
+#     val_path_fake = os.path.join(data_path, 'validation', 'fake')
+#     for file_name in os.listdir(path=val_path_real):
+#         audio_path = os.path.join(val_path_real, file_name)
+#         val_list.append(audio_path)
+#         labels[audio_path] = Labels.REAL.value
+#     for file_name in os.listdir(path=val_path_fake):
+#         audio_path = os.path.join(val_path_fake, file_name)
+#         val_list.append(audio_path)
+#         labels[audio_path] = Labels.FAKE.value
+#     partition['val'] = val_list
 
-    # testing partition
-    test_list = []
-    test_path_real = os.path.join(data_path, 'testing', 'real')
-    test_path_fake = os.path.join(data_path, 'testing', 'fake')
-    for file_name in os.listdir(path=test_path_real):
-        audio_path = os.path.join(test_path_real, file_name)
-        test_list.append(audio_path)
-        labels[audio_path] = Labels.REAL.value
-    for file_name in os.listdir(path=test_path_fake):
-        audio_path = os.path.join(test_path_fake, file_name)
-        test_list.append(audio_path)
-        labels[audio_path] = Labels.FAKE.value
-    partition['test'] = test_list
+#     # testing partition
+#     test_list = []
+#     test_path_real = os.path.join(data_path, 'testing', 'real')
+#     test_path_fake = os.path.join(data_path, 'testing', 'fake')
+#     for file_name in os.listdir(path=test_path_real):
+#         audio_path = os.path.join(test_path_real, file_name)
+#         test_list.append(audio_path)
+#         labels[audio_path] = Labels.REAL.value
+#     for file_name in os.listdir(path=test_path_fake):
+#         audio_path = os.path.join(test_path_fake, file_name)
+#         test_list.append(audio_path)
+#         labels[audio_path] = Labels.FAKE.value
+#     partition['test'] = test_list
 
-    return partition, labels
+#     return partition, labels
 
 
 def get_vgg_data_dicts():
