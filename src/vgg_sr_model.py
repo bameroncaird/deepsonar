@@ -475,7 +475,7 @@ def load_pretrained_vgg_model():
     # for DeepSonar, we don't need to retrain the SR system, we assume that the weights have all the necessary information
     # problem: how to properly select the time?
     # from predict.py: "the feature extraction has to be done sample by sample since each one is of different length"
-    mode = 'eval' # can be 'train' or 'eval', we'll do 'eval' mode since we are not training the model
+    mode = 'train' # can be 'train' or 'eval', we'll do 'eval' mode since we are not training the model
     model = vggvox_resnet2d_icassp(
         input_dim=hyper_params['input_shape'], num_class=hyper_params['num_classes'],
         mode=mode, args=hyper_params
