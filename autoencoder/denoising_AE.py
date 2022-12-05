@@ -1,3 +1,10 @@
+"""
+This file contains functions relating to an open-source Denoising Autoencoder (DAE).
+It also contains functions that our group wrote.
+We are using this DAE as a baseline for our fake voice classification.
+The repo can be found here: https://github.com/vbelz/Speech-enhancement
+"""
+
 import librosa
 import numpy as np
 import os
@@ -43,6 +50,22 @@ def audio_files_to_numpy(audio_dir, list_audio_files, sample_rate, frame_length,
             f"The following file {os.path.join(audio_dir,file)} is below the min duration")
         out = np.array([])
 
+    return out
+
+def single_audio_file_to_numpy(audio_path, sample_rate, frame_length, hop_length_frame, min_duration):
+    """
+    Similar to the function above, but only takes one audio file as input.
+    """
+    # get the audio in python from librosa
+    y, sr = librosa.load(audio_path, sr=sample_rate)
+    total_duration = librosa.get_duration(y=y, sr=sr)
+
+    # not sure as to the purpose of this right now
+    # see the function above
+    if total_duration >= min_duration:
+        out = audio_to_audio_frame_stack(y, frame_length, hop_length_frame)
+    else:
+        out = np.array([])
     return out
 
 def blend_noise_randomly(voice, noise, nb_samples, frame_length):
