@@ -1,5 +1,5 @@
 """
-This file contains functions relating to an open-source Denoising Autoencoder (DAE).
+This file contains functions relating to an open-source Denoising Autoencoder (DAE) written by the authors.
 It also contains functions that our group wrote.
 We are using this DAE as a baseline for our fake voice classification.
 The repo can be found here: https://github.com/vbelz/Speech-enhancement
@@ -217,3 +217,11 @@ def prediction(weights_path, name_model, audio_dir_prediction, dir_save_predicti
       #Save all frames in one file
       denoise_long = audio_denoise_recons.reshape(1, nb_samples * frame_length)*10
       soundfile.write(dir_save_prediction + audio_input_prediction + 'output.wav', denoise_long[0, :], sample_rate)
+
+def calculate_reconstruction_error(x, x_hat):
+    """
+    Returns the reconstruction error between two data points x and x_hat.
+    We will use the MSE as the reconstruction error in our case.
+    """
+    error = np.square(x - x_hat).mean()
+    return error
