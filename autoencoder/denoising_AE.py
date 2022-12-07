@@ -225,3 +225,12 @@ def calculate_reconstruction_error(x, x_hat):
     """
     error = np.square(x - x_hat).mean()
     return error
+
+def load_pretrained_model(display_summary=False):
+    """
+    Loads the pretrained model from a .json file and optionally displays a summary.
+    """
+    with open("weights/model_unet.json", "r") as json_file: loaded_model_json = json_file.read()
+    loaded_model = tf.keras.models.model_from_json(loaded_model_json)
+    if display_summary: loaded_model.summary()
+    return loaded_model
