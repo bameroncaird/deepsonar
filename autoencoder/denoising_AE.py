@@ -232,5 +232,9 @@ def load_pretrained_model(display_summary=False):
     """
     with open("weights/model_unet.json", "r") as json_file: loaded_model_json = json_file.read()
     loaded_model = tf.keras.models.model_from_json(loaded_model_json)
+
+    # load the pretrained weights in
+    loaded_model.load_weights("weights/model_unet.h5")
+
     if display_summary: loaded_model.summary()
     return loaded_model
