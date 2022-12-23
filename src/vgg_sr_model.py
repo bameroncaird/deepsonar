@@ -9,6 +9,7 @@ There are a few relevant files from this repo, but we will compartmentalize this
 
 # constants
 WEIGHT_DECAY = 1e-4
+INPUT_DIM = (499, 129, 1)
 
 ########################################################################################
 ########################################################################################
@@ -141,15 +142,12 @@ def conv_block_2D(input_tensor, kernel_size, filters, stage, block, strides=(2, 
 
 def resnet_2D_v1(input_dim, mode='train'):
 
-    # change input dim to match tf tutorial
-    # input_dim = (124, 129, 1)
-
     bn_axis = 3
     if mode == 'train':
         inputs = Input(shape=input_dim, name='input')
     else:
-        # inputs = Input(shape=(input_dim[0], None, input_dim[-1]), name='input')
-        inputs = Input(shape=(124, 129, 1), name='input')
+        inputs = Input(shape=(input_dim[0], None, input_dim[-1]), name='input')
+        # inputs = Input(shape=input_dim, name='input')
     # ===============================================
     #            Convolution Block 1
     # ===============================================
@@ -318,10 +316,11 @@ class VladPooling(tf.keras.layers.Layer):
 def amsoftmax_loss(y_true, y_pred, scale=30, margin=0.35):
     y_pred = y_true * (y_pred - margin) + (1 - y_true) * y_pred
     y_pred *= scale
+    # return K.categorical_crossentropy(y_true, y_pred, from_logits=False)
     return K.categorical_crossentropy(y_true, y_pred, from_logits=True)
 
 
-def vggvox_resnet2d_icassp(input_dim=(127, 129, 1), num_class=8631, mode='train', args=None):
+def vggvox_resnet2d_icassp(input_dim=INPUT_DIM, num_class=8631, mode='train', args=None):
     net = args['resnet_type']
     loss = args['loss']
     vlad_clusters = args['num_vlad_clusters']
@@ -330,6 +329,8 @@ def vggvox_resnet2d_icassp(input_dim=(127, 129, 1), num_class=8631, mode='train'
     aggregation = args['aggregation_mode']
     num_class = args['num_classes']
     # mgpu = len(keras.backend.tensorflow_backend._get_available_gpus())
+
+    print(f"\n\nInput Dim: {input_dim}\n\n")
 
     if net == 'resnet34s':
         inputs, x = resnet_2D_v1(input_dim=input_dim, mode=mode)
@@ -458,7 +459,7 @@ def load_pretrained_vgg_model():
         'num_ghost_clusters': 2, 'num_vlad_clusters': 8, 'bottleneck_dim': 512,
         'aggregation_mode': 'gvlad',  # means ghostvlad, other options: vlad, avg
         'loss': 'softmax',  # other option: amsoftmax
-        'input_shape': (124, 129, 1), 'n_fft': 512, 'spectro_len': 250,
+        'input_shape': INPUT_DIM, 'n_fft': 512, 'spectro_len': 250,
         'window_len': 400, 'hop_len': 160, 'num_classes': 5994, 'sampling_rate': 16000,
         'weights_path': "../sr_models/vgg_sr_pretrained_weights.h5",
         'normalize': True,
