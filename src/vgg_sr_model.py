@@ -320,7 +320,10 @@ def amsoftmax_loss(y_true, y_pred, scale=30, margin=0.35):
     return K.categorical_crossentropy(y_true, y_pred, from_logits=True)
 
 
-def vggvox_resnet2d_icassp(input_dim=INPUT_DIM, num_class=8631, mode='train', args=None):
+def vggvox_resnet2d_icassp(input_dim=INPUT_DIM, num_class=8631, mode='eval', args=None):
+
+    print(f"MODE = {mode}")
+
     net = args['resnet_type']
     loss = args['loss']
     vlad_clusters = args['num_vlad_clusters']
@@ -476,7 +479,7 @@ def load_pretrained_vgg_model():
     # for DeepSonar, we don't need to retrain the SR system, we assume that the weights have all the necessary information
     # problem: how to properly select the time?
     # from predict.py: "the feature extraction has to be done sample by sample since each one is of different length"
-    mode = 'train' # can be 'train' or 'eval', we'll do 'eval' mode since we are not training the model
+    mode = 'eval' # can be 'train' or 'eval', we'll do 'eval' mode since we are not training the model
     model = vggvox_resnet2d_icassp(
         input_dim=hyper_params['input_shape'], num_class=hyper_params['num_classes'],
         mode=mode, args=hyper_params
